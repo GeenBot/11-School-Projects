@@ -9,8 +9,8 @@ public class Main {
         //Randomly generatees 100 points to perform the function on.
         for (int i = 0; i < 100; i++) {
             Point template = new Point();
-            double xValue = i;
-            double yValue = i;
+            double xValue = i * 100 * Math.random();
+            double yValue = i * 100 * Math.random();
             template.x = xValue;
             template.y = yValue;
             inputPoints.add(template);
@@ -55,6 +55,7 @@ public class Main {
         }
     }
 
+    //Second method of finding the closest n points by insertion sorting in the new points and then removing the largest value
     static Point[] FindN2ClosestPoints(List<Point> pointArray, Point originPoint, int n) {
         Point[] answerArray = new Point[n];
         //Populates the array with the first few points.
@@ -63,11 +64,12 @@ public class Main {
         }
         answerArray = bubbleSortPoints(answerArray, originPoint);
         
-        for (int a = n + 1; a < pointArray.size(); a++) {
+        for (int a = n; a < pointArray.size(); a++) {
             int counter = 0;
             int arrayCounter = 0;
             double distanceToNewPoint = pointArray.get(a).distanceTo(originPoint);
             Point[] tempAnswers = new Point[n];
+            boolean inserted = false;
             while (counter < n) {
                 
                 
@@ -75,9 +77,12 @@ public class Main {
                     tempAnswers[counter] = answerArray[arrayCounter];
                 } else {
                     tempAnswers[counter] = pointArray.get(a);
-                    if (counter != n - 1) {
+                    if ((counter != n - 1) & !inserted) {
+                        inserted = true;
                         tempAnswers[counter + 1] = answerArray[arrayCounter];
                         counter++;
+                    } else {
+                       tempAnswers[counter] = answerArray[arrayCounter]; 
                     }
                 }
                 counter++;
