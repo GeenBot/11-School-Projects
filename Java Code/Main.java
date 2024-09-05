@@ -9,8 +9,8 @@ public class Main {
         //Randomly generatees 100 points to perform the function on.
         for (int i = 0; i < 100; i++) {
             Point template = new Point();
-            double xValue = Math.random() * 100;
-            double yValue = Math.random() * 100;
+            double xValue = i;
+            double yValue = i;
             template.x = xValue;
             template.y = yValue;
             inputPoints.add(template);
@@ -20,7 +20,7 @@ public class Main {
         origin.x = 0;
         origin.y = 0;
         int numberOfPoints = 5;
-        Point[] answer = FindNClosestPoints(inputPoints, origin, numberOfPoints);
+        Point[] answer = FindN2ClosestPoints(inputPoints, origin, numberOfPoints);
         
         int num = 2;
     }
@@ -54,6 +54,40 @@ public class Main {
             return Math.pow(Math.pow(yChange,2) + Math.pow(xChange, 2),0.5);
         }
     }
+
+    static Point[] FindN2ClosestPoints(List<Point> pointArray, Point originPoint, int n) {
+        Point[] answerArray = new Point[n];
+        //Populates the array with the first few points.
+        for (int a = 0; a < n; a++) {
+            answerArray[a] = pointArray.get(a);
+        }
+        answerArray = bubbleSortPoints(answerArray, originPoint);
+        
+        for (int a = n + 1; a < pointArray.size(); a++) {
+            int counter = 0;
+            int arrayCounter = 0;
+            double distanceToNewPoint = pointArray.get(a).distanceTo(originPoint);
+            Point[] tempAnswers = new Point[n];
+            while (counter < n) {
+                
+                
+                if (distanceToNewPoint >= answerArray[arrayCounter].distanceTo(originPoint)) {
+                    tempAnswers[counter] = answerArray[arrayCounter];
+                } else {
+                    tempAnswers[counter] = pointArray.get(a);
+                    if (counter != n - 1) {
+                        tempAnswers[counter + 1] = answerArray[arrayCounter];
+                        counter++;
+                    }
+                }
+                counter++;
+                arrayCounter++;
+            }
+            answerArray = tempAnswers;
+        }
+        return answerArray;
+    }
+
 
     //Bubble sorts the points inputted by their distance to the 2nd point parameter with larger distances coming last (right most and largest position).
     static Point[] bubbleSortPoints(Point[] nLengthList, Point originPoint) {
